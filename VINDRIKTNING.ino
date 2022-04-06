@@ -159,14 +159,14 @@ void onStaDisconeced(WiFiEvent_t event, WiFiEventInfo_t info){
 
 void onMqttMessage(int messageSize) {
   // Log message details
-  Serial.println("Received a message with topic '");
+  Serial.print("Received a message with topic '");
   Serial.print(mqttClient.messageTopic());
   Serial.print("', length ");
   Serial.print(messageSize);
-  Serial.println(" bytes:");
+  Serial.println(" bytes.");
 
 
-  if(mqttClient.messageTopic().compareTo(mqtt_topic_brightness)) {
+  if(mqttClient.messageTopic().equals(mqtt_topic_brightness)) {
     // Parse message
     uint8_t brightness = mqttClient.readString().toInt();
     
