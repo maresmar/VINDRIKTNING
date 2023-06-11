@@ -123,18 +123,18 @@ void setupMqtt() {
     Serial.print("MQTT connection failed! Error code = ");
     Serial.println(mqttClient.connectError());
     alert(TEMP_LED);
+  } else {
+    Serial.println("You're connected to the MQTT broker!");
+    // set the message receive callback
+    mqttClient.onMessage(onMqttMessage);
+    mqttClient.subscribe(mqtt_topic_brightness);
   }
-  Serial.println("You're connected to the MQTT broker!");
-
-  // set the message receive callback
-  mqttClient.onMessage(onMqttMessage);
-  mqttClient.subscribe(mqtt_topic_brightness);
 }
 
 void setupSntp() {
   sntp_setoperatingmode(SNTP_OPMODE_POLL);
   sntp_setservername(0, "pool.ntp.org");
-  sntp_init();
+  sntp_init();  
 
   // Set timezone to CEST
   setenv("TZ", "CEST", 1);
@@ -155,6 +155,7 @@ void onStaDisconeced(WiFiEvent_t event, WiFiEventInfo_t info){
   Serial.println("Disconnected from WiFi access point");
   Serial.print("WiFi lost connection. Reason: ");
   Serial.println(info.disconnected.reason);
+  WiFi.setAutoReconnect(false);
 }
 
 void onMqttMessage(int messageSize) {
@@ -164,7 +165,6 @@ void onMqttMessage(int messageSize) {
   Serial.print("', length ");
   Serial.print(messageSize);
   Serial.println(" bytes.");
-
 
   if(mqttClient.messageTopic().equals(mqtt_topic_brightness)) {
     // Parse message
@@ -239,33 +239,21 @@ void loop() {
 
     if(co2 < 1000){
       setColorWS(0, 255, 0, CO2_LED);
-    }
-    
-    if((co2 >= 1000) && (co2 < 1200)){
+    } else if((co2 >= 1000) && (co2 < 1200)){
       setColorWS(128, 255, 0, CO2_LED);
-    }
-    
-    if((co2 >= 1200) && (co2 < 1500)){
-    setColorWS(255, 255, 0, CO2_LED);
-    }
-    
-    if((co2 >= 1500) && (co2 < 2000)){
+    } else if((co2 >= 1200) && (co2 < 1500)){
+      setColorWS(255, 255, 0, CO2_LED);
+    } else if((co2 >= 1500) && (co2 < 2000)){
       setColorWS(255, 128, 0, CO2_LED);
-    }
-    
-    if(co2 >= 2000){
+    } else if(co2 >= 2000){
       setColorWS(255, 0, 0, CO2_LED);
     }
 
     if(temperature < 23.0){
       setColorWS(0, 0, 255, TEMP_LED);
-    }
-
-    if((temperature >= 23.0) && (temperature < 28.0)){
+    } else if((temperature >= 23.0) && (temperature < 28.0)){
       setColorWS(0, 255, 0, TEMP_LED);
-    }
-
-    if(temperature >= 28.0){
+    } else if(temperature >= 28.0){
       setColorWS(255, 0, 0, TEMP_LED);
     }
   }
@@ -273,21 +261,13 @@ void loop() {
   // PM LED
   if(pm2_5 < 30){
     setColorWS(0, 255, 0, PM_LED);
-  }
-  
-  if((pm2_5 >= 30) && (pm2_5 < 40)){
+  } else if((pm2_5 >= 30) && (pm2_5 < 40)){
     setColorWS(128, 255, 0, PM_LED);
-  }
-  
-  if((pm2_5 >= 40) && (pm2_5 < 80)){
-  setColorWS(255, 255, 0, PM_LED);
-  }
-  
-  if((pm2_5 >= 80) && (pm2_5 < 90)){
+  } else if((pm2_5 >= 40) && (pm2_5 < 80)){
+    setColorWS(255, 255, 0, PM_LED);
+  } else if((pm2_5 >= 80) && (pm2_5 < 90)){
     setColorWS(255, 128, 0, PM_LED);
-  }
-  
-  if(pm2_5 >= 90){
+  } else if(pm2_5 >= 90){
     setColorWS(255, 0, 0, PM_LED);
   }
 
