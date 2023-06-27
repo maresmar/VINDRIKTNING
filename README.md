@@ -14,4 +14,9 @@ The `env.h` file is needed with following content:
 #define BROKER_HOST "192.168.0.1"
 #define BROKER_PORT 1883
 #define MQTT_PREFIX "home/room"
+
+#define INFLUXDB_URL "https://192.168.0.1:8090"
+#define INFLUXDB_TOKEN "token"
+#define INFLUXDB_ORG "myorg"
+#define INFLUXDB_BUCKET "me/probe"
 ```
