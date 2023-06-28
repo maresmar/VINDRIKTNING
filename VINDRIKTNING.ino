@@ -186,8 +186,8 @@ void onStaGotIp(WiFiEvent_t event, WiFiEventInfo_t info)
   influxPoint.addTag("BSSID", WiFi.BSSIDstr());
 
   setupSntp();
-  setupMqtt();
   wifiReady = true;
+  setupMqtt();
 }
 
 void onStaDisconnected(WiFiEvent_t event, WiFiEventInfo_t info)
@@ -229,6 +229,7 @@ void loop()
   if (wifiReady && !influxReady)
   {
     setupInfluxClient();
+    influxReady = true;
   }
 
   if (mqttClient.connected())
